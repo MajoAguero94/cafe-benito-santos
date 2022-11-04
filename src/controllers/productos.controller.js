@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import Producto from "../models/producto";
 
 export const listarProductos =async (req, res) => {
@@ -36,7 +37,15 @@ console.log(req.params.id)
 
 export const crearProducto = async (req, res) => {
   try {
-    console.log(req.body);
+    //manejar los errores de la validacion
+    const errors = validationResult(req);
+    //console.log(errors.isEmpty() dvuelve errores
+    if(!errors.isEmpty()){
+      return res.status(400).json({
+        errors: errors.array()
+      })
+    }
+   //console.log(req.body);
     //validar el objeto recibido
     // creo el objeto con mongoose
     const productoNuevo = new Producto(req.body);
@@ -56,6 +65,15 @@ export const crearProducto = async (req, res) => {
 
 export const editarProducto = async (req,res)=>{
   try {
+ //manejar los errores de la validacion
+ const errors = validationResult(req);
+ //console.log(errors.isEmpty() dvuelve errores
+ if(!errors.isEmpty()){
+   return res.status(400).json({
+     errors: errors.array()
+   })
+ }
+
     //obtener el parametro (req.params.id)
     //obtener los datos del body validados (req.body)
     //guardar o actualizar l producto en una base de datos
